@@ -1,1 +1,99 @@
-# Kwai_convite
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Convite Kwai</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 48px 40px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+    }
+    .logo { width: 72px; height: 72px; border-radius: 18px; margin: 0 auto 20px; display: block; }
+    h1 { font-size: 1.5rem; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+    .subtitle { font-size: 0.95rem; color: #666; margin-bottom: 32px; line-height: 1.5; }
+    #desktop-view { display: none; }
+    #qrcode { display: flex; justify-content: center; margin: 24px auto; }
+    #qrcode canvas, #qrcode img { border-radius: 12px; border: 6px solid #f5f5f5; }
+    .hint { font-size: 0.85rem; color: #999; margin-top: 8px; }
+    #mobile-view { display: none; }
+    .spinner {
+      width: 48px; height: 48px;
+      border: 4px solid #f0f0f0;
+      border-top-color: #ee0979;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 24px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .redirect-msg { font-size: 1rem; color: #444; margin-bottom: 8px; }
+    .countdown { font-size: 2rem; font-weight: 700; color: #ee0979; }
+    .btn {
+      display: inline-block; margin-top: 24px; padding: 14px 32px;
+      background: linear-gradient(135deg, #ff6a00, #ee0979);
+      color: #fff; border-radius: 50px; font-size: 1rem;
+      font-weight: 600; text-decoration: none; transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.88; }
+    .footer { margin-top: 28px; font-size: 0.78rem; color: #bbb; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <img class="logo" src="https://www.kwai.com/favicon.ico" onerror="this.style.display='none'" alt="Kwai" />
+  <h1>Você recebeu um convite!</h1>
+  <p class="subtitle">Junte-se ao Kwai e aproveite os benefícios do convite.</p>
+  <div id="desktop-view">
+    <p style="font-size:0.95rem;color:#444;margin-bottom:4px;">📱 Abra este QR Code com a câmera do seu celular</p>
+    <div id="qrcode"></div>
+    <p class="hint">O link funciona melhor no app Kwai (Android ou iOS)</p>
+    <p class="footer">Ou copie o link: <strong>https://k.kwai.com/w/QmuyedGY</strong></p>
+  </div>
+  <div id="mobile-view">
+    <div class="spinner"></div>
+    <p class="redirect-msg">Redirecionando para o Kwai em</p>
+    <div class="countdown" id="count">3</div>
+    <br/>
+    <a class="btn" href="https://k.kwai.com/w/QmuyedGY">Abrir agora →</a>
+  </div>
+</div>
+<script>
+  const KWAI_LINK = "https://k.kwai.com/w/QmuyedGY";
+  function isMobile() {
+    return /Android|iPhone|iPad|iPod|Mobile|Tablet/i.test(navigator.userAgent) || window.innerWidth <= 768;
+  }
+  if (isMobile()) {
+    document.getElementById("mobile-view").style.display = "block";
+    let n = 3;
+    const el = document.getElementById("count");
+    const timer = setInterval(() => {
+      n--; el.textContent = n;
+      if (n <= 0) { clearInterval(timer); window.location.href = KWAI_LINK; }
+    }, 1000);
+  } else {
+    document.getElementById("desktop-view").style.display = "block";
+    new QRCode(document.getElementById("qrcode"), {
+      text: KWAI_LINK, width: 200, height: 200,
+      colorDark: "#1a1a1a", colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  }
+</script>
+</body>
+</html>
