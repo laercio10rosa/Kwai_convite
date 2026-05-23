@@ -28,52 +28,46 @@
       padding: 5px 16px; border-radius: 50px; margin-bottom: 14px;
     }
     .subtitle { font-size: 0.92rem; color: #666; margin-bottom: 24px; line-height: 1.55; }
+
+    /* Código */
     .code-box {
       background: #fff7f0; border: 2px dashed #ff6a00;
-      border-radius: 14px; padding: 12px 20px; margin-bottom: 24px;
+      border-radius: 14px; padding: 12px 20px; margin-bottom: 16px;
+      position: relative;
     }
     .code-label { font-size: 0.72rem; color: #bbb; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .code-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
     .code-value { font-size: 1.4rem; font-weight: 800; color: #ff6a00; letter-spacing: 1px; }
+    .copy-btn {
+      background: none; border: 2px solid #ff6a00; color: #ff6a00;
+      border-radius: 8px; padding: 4px 10px; font-size: 0.75rem;
+      font-weight: 700; cursor: pointer; transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .copy-btn:hover { background: #ff6a00; color: #fff; }
+    .copy-btn.copied { background: #22c55e; border-color: #22c55e; color: #fff; }
 
     /* ── Desktop ── */
     #desktop-view { display: none; }
     #qrcode { display: flex; justify-content: center; margin: 18px auto; }
     #qrcode canvas, #qrcode img { border-radius: 12px; border: 6px solid #f5f5f5; }
     .hint { font-size: 0.82rem; color: #bbb; margin-top: 6px; }
-    .footer-link {
-      margin-top: 20px; font-size: 0.78rem; color: #bbb;
-    }
-    .footer-link a { color: #ff6a00; text-decoration: none; font-weight: 600; }
-    .footer-link a:hover { text-decoration: underline; }
 
     /* ── Mobile ── */
     #mobile-view { display: none; }
-    .spinner {
-      width: 44px; height: 44px; border: 4px solid #f0f0f0;
-      border-top-color: #ee0979; border-radius: 50%;
-      animation: spin 0.8s linear infinite; margin: 18px auto;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .redirect-msg { font-size: 0.95rem; color: #555; margin-bottom: 6px; }
-    .countdown { font-size: 2rem; font-weight: 700; color: #ee0979; margin-bottom: 16px; }
-
     .btn {
       display: inline-block; padding: 13px 30px;
       background: linear-gradient(135deg, #ff6a00, #ee0979);
       color: #fff; border-radius: 50px; font-size: 0.97rem;
       font-weight: 700; text-decoration: none; transition: opacity 0.2s;
-      margin-bottom: 24px;
+      margin-bottom: 22px; margin-top: 6px;
     }
     .btn:hover { opacity: 0.88; }
-
     .divider {
       display: flex; align-items: center; gap: 10px;
-      margin-bottom: 16px; color: #ccc; font-size: 0.8rem;
+      margin-bottom: 14px; color: #ccc; font-size: 0.8rem;
     }
-    .divider::before, .divider::after {
-      content: ''; flex: 1; height: 1px; background: #eee;
-    }
-
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #eee; }
     .store-label { font-size: 0.8rem; color: #999; margin-bottom: 10px; }
     .store-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
     .store-btn {
@@ -95,28 +89,25 @@
   <h1>Você foi convidado!</h1>
   <div class="reward-badge">🎁 Ganhe R$1 ao se cadastrar</div>
   <p class="subtitle">Crie sua conta no Kwai, insira o código de convite e ganhe R$1 + bônus em Kwai Golds nos seus primeiros dias.</p>
+
   <div class="code-box">
     <div class="code-label">Seu código de convite</div>
-    <div class="code-value">Kwai284449238</div>
-  </div>
-
-  <!-- Desktop: QR Code -->
-  <div id="desktop-view">
-    <p style="font-size:0.92rem;color:#555;margin-bottom:4px;">📱 Aponte a câmera do celular para o QR Code</p>
-    <div id="qrcode"></div>
-    <p class="hint">Funciona melhor abrindo direto no app Kwai</p>
-    <div class="footer-link">
-      Ou acesse pelo celular: <a href="https://k.kwai.com/w/QmuyedGY" target="_blank">k.kwai.com/w/QmuyedGY</a>
+    <div class="code-row">
+      <div class="code-value" id="code-text">Kwai284449238</div>
+      <button class="copy-btn" id="copy-btn" onclick="copyCode()">Copiar</button>
     </div>
   </div>
 
-  <!-- Mobile: tudo em uma tela só -->
-  <div id="mobile-view">
-    <div class="spinner"></div>
-    <p class="redirect-msg">Abrindo o Kwai em</p>
-    <div class="countdown" id="count">3</div>
+  <!-- Desktop: QR code aponta para esta página -->
+  <div id="desktop-view">
+    <p style="font-size:0.92rem;color:#555;margin-bottom:4px;">📱 Aponte a câmera do celular para abrir no seu telefone</p>
+    <div id="qrcode"></div>
+    <p class="hint">Abra no celular para acessar o Kwai com seu código</p>
+  </div>
 
-    <a class="btn" href="https://k.kwai.com/w/QmuyedGY">Abrir agora →</a>
+  <!-- Mobile: código + botão Kwai + lojas -->
+  <div id="mobile-view">
+    <a class="btn" href="https://k.kwai.com/w/QmuyedGY">🎬 Abrir no Kwai</a>
 
     <div class="divider">Não tem o app?</div>
     <div class="store-label">Baixe gratuitamente e resgate seu bônus</div>
@@ -129,35 +120,44 @@
       </a>
     </div>
     <div class="after-install">
-      Após instalar, volte aqui e toque em <strong>"Abrir agora"</strong> — seu código será vinculado automaticamente.
+      Após instalar, toque em <strong>"Abrir no Kwai"</strong> acima — seu código será vinculado automaticamente.
     </div>
   </div>
 </div>
 
 <script>
+  const PAGE_URL  = "https://laercio10rosa.github.io/Kwai_convite/";
   const KWAI_LINK = "https://k.kwai.com/w/QmuyedGY";
+
   function isMobile() {
     return /Android|iPhone|iPad|iPod|Mobile|Tablet/i.test(navigator.userAgent) || window.innerWidth <= 820;
   }
+
   if (!isMobile()) {
+    // Desktop: QR aponta para esta mesma página (não para o Kwai)
     document.getElementById("desktop-view").style.display = "block";
     new QRCode(document.getElementById("qrcode"), {
-      text: KWAI_LINK, width: 190, height: 190,
+      text: PAGE_URL,
+      width: 190, height: 190,
       colorDark: "#1a1a1a", colorLight: "#ffffff",
       correctLevel: QRCode.CorrectLevel.H
     });
   } else {
+    // Mobile: mostra código + botão Kwai + lojas
     document.getElementById("mobile-view").style.display = "block";
-    let n = 3;
-    const el = document.getElementById("count");
-    const timer = setInterval(() => {
-      n--; el.textContent = n;
-      if (n <= 0) {
-        clearInterval(timer);
-        el.textContent = "→";
-        window.location.href = KWAI_LINK;
-      }
-    }, 1000);
+  }
+
+  function copyCode() {
+    const code = document.getElementById("code-text").textContent;
+    navigator.clipboard.writeText(code).then(() => {
+      const btn = document.getElementById("copy-btn");
+      btn.textContent = "Copiado!";
+      btn.classList.add("copied");
+      setTimeout(() => {
+        btn.textContent = "Copiar";
+        btn.classList.remove("copied");
+      }, 2000);
+    });
   }
 </script>
 </body>
