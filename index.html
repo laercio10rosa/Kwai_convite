@@ -32,53 +32,54 @@
     /* Código */
     .code-box {
       background: #fff7f0; border: 2px dashed #ff6a00;
-      border-radius: 14px; padding: 12px 20px; margin-bottom: 16px;
-      position: relative;
+      border-radius: 14px; padding: 12px 20px; margin-bottom: 24px;
     }
-    .code-label { font-size: 0.72rem; color: #bbb; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .code-label { font-size: 0.72rem; color: #bbb; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
     .code-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
     .code-value { font-size: 1.4rem; font-weight: 800; color: #ff6a00; letter-spacing: 1px; }
     .copy-btn {
       background: none; border: 2px solid #ff6a00; color: #ff6a00;
-      border-radius: 8px; padding: 4px 10px; font-size: 0.75rem;
-      font-weight: 700; cursor: pointer; transition: all 0.2s;
-      white-space: nowrap;
+      border-radius: 8px; padding: 5px 12px; font-size: 0.75rem;
+      font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap;
     }
     .copy-btn:hover { background: #ff6a00; color: #fff; }
     .copy-btn.copied { background: #22c55e; border-color: #22c55e; color: #fff; }
 
-    /* ── Desktop ── */
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #22c55e; color: #fff; padding: 10px 22px;
+      border-radius: 50px; font-size: 0.85rem; font-weight: 600;
+      opacity: 0; transition: opacity 0.3s; pointer-events: none;
+      white-space: nowrap; z-index: 999;
+    }
+    .toast.show { opacity: 1; }
+
+    /* Desktop */
     #desktop-view { display: none; }
     #qrcode { display: flex; justify-content: center; margin: 18px auto; }
     #qrcode canvas, #qrcode img { border-radius: 12px; border: 6px solid #f5f5f5; }
     .hint { font-size: 0.82rem; color: #bbb; margin-top: 6px; }
 
-    /* ── Mobile ── */
+    /* Mobile */
     #mobile-view { display: none; }
+    .spinner {
+      width: 44px; height: 44px; border: 4px solid #f0f0f0;
+      border-top-color: #ee0979; border-radius: 50%;
+      animation: spin 0.8s linear infinite; margin: 16px auto 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .redirect-msg { font-size: 0.9rem; color: #888; margin-bottom: 4px; }
+    .countdown { font-size: 2rem; font-weight: 700; color: #ee0979; margin-bottom: 18px; }
     .btn {
-      display: inline-block; padding: 13px 30px;
+      display: inline-block; padding: 13px 32px;
       background: linear-gradient(135deg, #ff6a00, #ee0979);
       color: #fff; border-radius: 50px; font-size: 0.97rem;
       font-weight: 700; text-decoration: none; transition: opacity 0.2s;
-      margin-bottom: 22px; margin-top: 6px;
     }
     .btn:hover { opacity: 0.88; }
-    .divider {
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 14px; color: #ccc; font-size: 0.8rem;
-    }
-    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #eee; }
-    .store-label { font-size: 0.8rem; color: #999; margin-bottom: 10px; }
-    .store-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-    .store-btn {
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 10px 16px; border-radius: 12px; font-size: 0.83rem;
-      font-weight: 600; text-decoration: none; background: #1a1a1a;
-      color: #fff; transition: opacity 0.2s;
-    }
-    .store-btn:hover { opacity: 0.82; }
-    .after-install {
-      margin-top: 14px; font-size: 0.78rem; color: #aaa; line-height: 1.5;
+    .note {
+      margin-top: 16px; font-size: 0.78rem; color: #bbb; line-height: 1.5;
       background: #f9f9f9; border-radius: 10px; padding: 10px 14px;
     }
   </style>
@@ -88,53 +89,46 @@
   <img class="logo" src="https://www.kwai.com/favicon.ico" onerror="this.style.display='none'" alt="Kwai" />
   <h1>Você foi convidado!</h1>
   <div class="reward-badge">🎁 Ganhe R$1 ao se cadastrar</div>
-  <p class="subtitle">Crie sua conta no Kwai, insira o código de convite e ganhe R$1 + bônus em Kwai Golds nos seus primeiros dias.</p>
+  <p class="subtitle">Crie sua conta no Kwai, insira o código e ganhe R$1 + bônus em Kwai Golds nos primeiros dias.</p>
 
   <div class="code-box">
-    <div class="code-label">Seu código de convite</div>
+    <div class="code-label">Código de convite</div>
     <div class="code-row">
       <div class="code-value" id="code-text">Kwai284449238</div>
       <button class="copy-btn" id="copy-btn" onclick="copyCode()">Copiar</button>
     </div>
   </div>
 
-  <!-- Desktop: QR code aponta para esta página -->
+  <!-- Desktop: QR aponta para esta página -->
   <div id="desktop-view">
     <p style="font-size:0.92rem;color:#555;margin-bottom:4px;">📱 Aponte a câmera do celular para abrir no seu telefone</p>
     <div id="qrcode"></div>
     <p class="hint">Abra no celular para acessar o Kwai com seu código</p>
   </div>
 
-  <!-- Mobile: código + botão Kwai + lojas -->
+  <!-- Mobile: redirect automático + botão manual -->
   <div id="mobile-view">
-    <a class="btn" href="https://k.kwai.com/w/QmuyedGY">🎬 Abrir no Kwai</a>
-
-    <div class="divider">Não tem o app?</div>
-    <div class="store-label">Baixe gratuitamente e resgate seu bônus</div>
-    <div class="store-btns">
-      <a class="store-btn" href="https://play.google.com/store/apps/details?id=com.kwai.video" target="_blank">
-        ▶ Google Play
-      </a>
-      <a class="store-btn" href="https://apps.apple.com/br/app/kwai/id1113795449" target="_blank">
-         App Store
-      </a>
-    </div>
-    <div class="after-install">
-      Após instalar, toque em <strong>"Abrir no Kwai"</strong> acima — seu código será vinculado automaticamente.
+    <div class="spinner"></div>
+    <p class="redirect-msg">Abrindo o Kwai em</p>
+    <div class="countdown" id="count">3</div>
+    <a class="btn" href="https://k.kwai.com/w/QmuyedGY" id="open-btn">🎬 Abrir no Kwai</a>
+    <div class="note">
+      Sem o app? O link acima também leva à loja preservando seu código de convite. Após instalar, toque em <strong>"Abrir no Kwai"</strong>.
     </div>
   </div>
 </div>
 
+<div class="toast" id="toast">✓ Código copiado!</div>
+
 <script>
-  const PAGE_URL  = "https://laercio10rosa.github.io/Kwai_convite/";
   const KWAI_LINK = "https://k.kwai.com/w/QmuyedGY";
+  const PAGE_URL  = "https://laercio10rosa.github.io/Kwai_convite/";
 
   function isMobile() {
     return /Android|iPhone|iPad|iPod|Mobile|Tablet/i.test(navigator.userAgent) || window.innerWidth <= 820;
   }
 
   if (!isMobile()) {
-    // Desktop: QR aponta para esta mesma página (não para o Kwai)
     document.getElementById("desktop-view").style.display = "block";
     new QRCode(document.getElementById("qrcode"), {
       text: PAGE_URL,
@@ -143,21 +137,37 @@
       correctLevel: QRCode.CorrectLevel.H
     });
   } else {
-    // Mobile: mostra código + botão Kwai + lojas
     document.getElementById("mobile-view").style.display = "block";
+    let n = 3;
+    const el = document.getElementById("count");
+    const timer = setInterval(() => {
+      n--; el.textContent = n;
+      if (n <= 0) {
+        clearInterval(timer);
+        el.textContent = "→";
+        window.location.href = KWAI_LINK;
+      }
+    }, 1000);
   }
 
   function copyCode() {
-    const code = document.getElementById("code-text").textContent;
+    const code = document.getElementById("code-text").textContent.trim();
     navigator.clipboard.writeText(code).then(() => {
       const btn = document.getElementById("copy-btn");
       btn.textContent = "Copiado!";
       btn.classList.add("copied");
+      showToast();
       setTimeout(() => {
         btn.textContent = "Copiar";
         btn.classList.remove("copied");
-      }, 2000);
+      }, 2500);
     });
+  }
+
+  function showToast() {
+    const t = document.getElementById("toast");
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2500);
   }
 </script>
 </body>
