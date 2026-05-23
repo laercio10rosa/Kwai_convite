@@ -122,7 +122,11 @@
   const PAGE_URL  = "https://laercio10rosa.github.io/Kwai_convite/";
 
   function isMobile() {
-    return /Android|iPhone|iPad|iPod|Mobile|Tablet/i.test(navigator.userAgent) || window.innerWidth <= 820;
+    const ua = navigator.userAgent;
+    const isOldIPad = /iPad/i.test(ua);
+    const isNewIPad = /Macintosh/i.test(ua) && navigator.maxTouchPoints > 1;
+    const isPhone   = /Android|iPhone|iPod|Mobile/i.test(ua);
+    return isOldIPad || isNewIPad || isPhone || window.innerWidth <= 1024;
   }
 
   if (!isMobile()) {
